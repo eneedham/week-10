@@ -21,12 +21,12 @@ feel free to expand beyond the minimal case.
   - [Layer methods](http://docs.cartodb.com/cartodb-platform/cartodb-js/api-methods/#cartodbcartodblayer) (`getSubLayer`, in particular)
   - [SubLayer methods](http://docs.cartodb.com/cartodb-platform/cartodb-js/api-methods/#cartodbcartodbsublayer) (`setSQL`, in particular)
 
-2. Customize a popup window which neatly displays a few pieces of
+<!-- 2. Customize a popup window which neatly displays a few pieces of
    information and uses at least one bootstrap class. There are
    two strategies for doing this:
   1. Writing the HTML for your info window in the cartodb web application
   OR
-  2. [custom interaction through JS](http://docs.cartodb.com/tutorials/custom_interactivity/)
+  2. [custom interaction through JS](http://docs.cartodb.com/tutorials/custom_interactivity/) -->
 
 3. Add some style to your map which makes the data it represents clear
 
@@ -34,4 +34,3 @@ feel free to expand beyond the minimal case.
 
 5. Add a means of getting data from your CartoDB account to the sidebar
    (refer to the example for one such case).
-
