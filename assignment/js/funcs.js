@@ -1,29 +1,8 @@
-
-/** Find the N closest world bank projects */
-function nClosest(point, n) {
-  // The SQL in english:
-  // SELECT (all data) FROM (the table, world_bank_projects)
-  // ORDER BY (distance of these geoms from the provided point)
-  // LIMIT (to n cases)
-  var sql = 'SELECT * FROM world_bank_projects ORDER BY the_geom <-> ST_Point(' + point.lng + ',' + point.lat + ') LIMIT ' + n;
-
-  $.ajax('https://eneedham.cartodb.com/api/v2/sql/?q=' + sql).done(function(results) {
-    //console.log(n +' closest:', results);
-    addRecords(results);
-  });
-}
-
 /** Find all points within the box constructed */
-function pointsWithin(rect) {
-  // Grab the southwest and northeast points in this rectangle
-  var sw = rect[0];
-  var ne = rect[2];
-
-  var sql = 'SELECT * FROM world_bank_projects WHERE the_geom @ ST_MakeEnvelope(' +
-    sw.lng + ','+ sw.lat + ',' + ne.lng + ',' + ne.lat + ', 4326)';
+function stormsNearby() {
+  var sql = "SELECT * FROM lsr_24hour ORDER BY the_geom <-> ST_SetSRID(ST_MakePoint("+myLocation.lng+","+myLocation.lat+"), 4326) LIMIT 8";
 
   $.ajax('https://eneedham.cartodb.com/api/v2/sql/?q=' + sql).done(function(results) {
-    //console.log('pointsWithin:', results);
     addRecords(results);
   });
 }
@@ -38,20 +17,19 @@ function pointsWithin(rect) {
  */
 function addOneRecord(rec) {
   var title = $('<p></p>')
-    .text('Title: ' + rec.project_title);
+    .text('City: ' + rec.city);
 
   var location = $('<p></p>')
-    .text('Location: ' + rec.geoname + ', ' + rec.country);
+    .text('Storm Info: ' + rec.remark);
 
-  var lending_instrument = $('<p></p>')
-    .text('Instrument: ' + rec.lending_instrument);
-
+  var type = $('<p></p>')
+    .text(rec.typetext);
 
   var recordElement = $('<li></li>')
     .addClass('list-group-item')
     .append(title)
     .append(location)
-    .append(lending_instrument);
+    .append(type);
 
   $('#project-list').append(recordElement);
 }
@@ -61,3 +39,19 @@ function addRecords(cartodbResults) {
   $('#project-list').empty();
   _.each(cartodbResults.rows, addOneRecord);
 }
+
+//**********************************************************************************************
+
+//Default Zoom
+var defaultViewFunc = function(){
+    map.setView([39.50, -98.35], 4);
+};
+
+
+//Function to zoom in
+var eachFeature = function(feature, layer) {
+  layer.on('click', function (e) {
+    var bounds = this.getBounds();
+    map.fitBounds(bounds);
+  });
+};
